@@ -1,8 +1,6 @@
 require 'sinatra'
 require 'json'
 
-enable :method_override
-
 MEMOS_JSON_PATH = './data/memos.json'
 DEFAULT_TITLE = '新規メモ'
 
