@@ -30,6 +30,10 @@ def find_memo(id)
   memos.find { |memo| memo["id"] == id }
 end
 
+get '/' do
+  redirect '/memos'
+end
+
 get '/memos' do
   @memos = load_memos.map { |memo| memo["title"].strip.empty? ? fill_default_name(memo) : memo }
             .sort_by { |memo| memo["id"] }
@@ -64,6 +68,7 @@ end
 
 get '/memos/:id' do
   @memo = find_memo(params["id"].to_i)
+  halt 404 unless @memo
 
   erb :detail
 end
@@ -87,6 +92,7 @@ end
 
 get '/memos/:id/edit' do
   @memo = find_memo(params["id"].to_i)
+  halt 404 unless @memo
 
   erb :edit
 end
@@ -113,4 +119,8 @@ patch '/memos/:id' do
   end
 
   redirect '/memos'
+end
+
+not_found do
+  erb :error
 end
