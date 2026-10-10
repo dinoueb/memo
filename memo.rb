@@ -115,10 +115,12 @@ patch '/memos/:id' do
       file.rewind
       file.truncate(0)
       file.puts(JSON.pretty_generate(filtered_memos))
+    else
+      halt 404
     end
   end
 
-  redirect '/memos'
+  redirect "/memos/#{params["id"]}"
 end
 
 not_found do

@@ -1,10 +1,16 @@
 <div>
-  <form action="/memos" method="post">
-    <label for="title">タイトル</label>
-    <input id="title" name="title" type="text" maxlength="50">
-    <label for="text">内容</label>
-    <textarea id="text" name="text" maxlength="1000"></textarea>
-    <a href="/memos">破棄</a>
-    <button type="submit">新規作成</button>
+  <form action="/memos" method="post" class="form-area">
+    <div class="form-item">
+      <label for="title">タイトル</label>
+      <input id="title" name="title" type="text" maxlength="50">
+    </div>
+    <div class="form-item">
+      <label for="text">内容</label>
+      <textarea id="text" name="text" maxlength="1000"></textarea>
+    </div>
+    <div class="buttons">
+      <a href="/memos" class="button">破棄</a>
+      <button type="submit" class="button">新規作成</button>
+    </div>
   </form>
 </div>

@@ -1,10 +1,12 @@
 <div>
-  <article>
+  <article class="memo-list">
     <% @memos.each do |memo| %>
-    <a href="/memos/<%= h(memo["id"]) %>">
-      <h1><%= h(memo["title"]) %></h1>
+    <a href="/memos/<%= h(memo["id"]) %>" class="memo-card">
+      <h2><%= h(memo["title"]) %></h2>
     </a>
     <% end %>
   </article>
-  <a href="/memos/new">新規作成</a>
+  <div class="buttons">
+    <a href="/memos/new" class="button">新規作成</a>
+  </div>
 </div>

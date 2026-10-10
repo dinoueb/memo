@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/style.css" />
   <title>メモアプリ</title>
 </head>
 <body>
-  <header>
-    <a href="/memos">メモアプリ</a>
+  <header class="site-header">
+    <h1 class="site-title"><a href="/memos">メモアプリ</a></h1>
   </header>
-  <main>
+  <main class="site-main">
     <%= yield %>
   </main>
 </body>
