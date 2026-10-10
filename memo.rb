@@ -4,6 +4,14 @@ require 'json'
 MEMOS_JSON_PATH = './data/memos.json'
 DEFAULT_TITLE = '新規メモ'
 
+def fill_default_name(memo)
+  {
+    "id" => memo["id"],
+    "title" => DEFAULT_TITLE,
+    "text" => memo["text"]
+  }
+end
+
 def load_memos
   File.open(MEMOS_JSON_PATH, 'r') do |file|
     file.flock(File::LOCK_SH)
@@ -17,7 +25,8 @@ def find_memo(id)
 end
 
 get '/memos' do
-  @memos = load_memos.sort_by { |memo| memo["id"].to_i }
+  @memos = load_memos.map { |memo| memo["title"].strip.empty? ? fill_default_name(memo) : memo }
+            .sort_by { |memo| memo["id"] }
 
   erb :index
 end
@@ -32,10 +41,9 @@ post '/memos' do
 
     memos = JSON.parse(file.read)
     max_id = memos.map { |memo| memo["id"] }.max || 0
-    title = params["title"].empty? ? DEFAULT_TITLE : params["title"]
     memo = {
       "id" => max_id + 1,
-      "title" => title,
+      "title" => params["title"],
       "text" => params["text"]
     }
     memos << memo
@@ -85,10 +93,9 @@ patch '/memos/:id' do
     filtered_memos = memos.reject { |memo| memo["id"] == params["id"].to_i }
 
     if filtered_memos.length == memos.length - 1
-      title = params["title"].empty? ? DEFAULT_TITLE : params["title"]
       memo = {
         "id" => params["id"].to_i,
-        "title" => title,
+        "title" => params["title"],
         "text" => params["text"]
       }
       filtered_memos << memo
