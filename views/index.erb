@@ -1,8 +1,8 @@
 <div>
   <article>
     <% @memos.each do |memo| %>
-    <a href="/memos/<%= memo["id"] %>">
-      <h2><%= memo["title"] %></h2>
+    <a href="/memos/<%= h(memo["id"]) %>">
+      <h2><%= h(memo["title"]) %></h2>
     </a>
     <% end %>
   </article>

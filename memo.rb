@@ -4,6 +4,12 @@ require 'json'
 MEMOS_JSON_PATH = './data/memos.json'
 DEFAULT_TITLE = '新規メモ'
 
+helpers do
+  def h(text)
+    Rack::Utils.escape_html(text)
+  end
+end
+
 def fill_default_name(memo)
   {
     "id" => memo["id"],

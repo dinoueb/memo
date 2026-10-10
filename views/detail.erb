@@ -1,10 +1,10 @@
 <article>
-  <h1><%= @memo["title"] %></h1>
-  <p><%= @memo["text"] %></p>
+  <h1><%= h(@memo["title"]) %></h1>
+  <p><%= h(@memo["text"]) %></p>
   <div>
     <a href="/memos">一覧へ戻る</a>
-    <a href="/memos/<%= @memo["id"] %>/edit">編集</a>
-    <form action="/memos/<%= @memo["id"] %>" method="post">
+    <a href="/memos/<%= h(@memo["id"]) %>/edit">編集</a>
+    <form action="/memos/<%= h(@memo["id"]) %>" method="post">
       <input type="hidden" name="_method" value="DELETE">
       <button type="submit">削除</button>
     </form>
