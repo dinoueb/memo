@@ -42,7 +42,7 @@ post '/memos' do
 
     file.rewind
     file.truncate(0)
-    file.write(JSON.pretty_generate(memos))
+    file.puts(JSON.pretty_generate(memos))
   end
 
   redirect '/memos'
@@ -64,7 +64,7 @@ delete '/memos/:id' do
     if filtered_memos.length == memos.length - 1
       file.rewind
       file.truncate(0)
-      file.write(JSON.pretty_generate(filtered_memos))
+      file.puts(JSON.pretty_generate(filtered_memos))
     end
   end
 
@@ -95,7 +95,7 @@ patch '/memos/:id' do
 
       file.rewind
       file.truncate(0)
-      file.write(JSON.pretty_generate(filtered_memos))
+      file.puts(JSON.pretty_generate(filtered_memos))
     end
   end
 
