@@ -1,10 +1,10 @@
 <div>
-  <form action="/memos/1" method="post">
+  <form action="/memos/<%= @memo["id"] %>" method="post">
     <input type="hidden" name="_method" value="PATCH">
     <label for="title">タイトル</label>
-    <input id="title" name="title" type="text" maxlength="50">
+    <input id="title" name="title" type="text" value="<%= @memo["title"] %>" maxlength="50">
     <label for="text">内容</label>
-    <textarea id="text" name="text" maxlength="1000"></textarea>
+    <textarea id="text" name="text" maxlength="1000"><%= @memo["text"] %></textarea>
     <a href="/memos">中止</a>
     <button type="submit">保存</button>
   </form>

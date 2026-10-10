@@ -1,8 +1,10 @@
 <div>
   <article>
-    <a href="/memos/1">
-      <h2>タイトル</h2>
+    <% @memos.each do |memo| %>
+    <a href="/memos/<%= memo["id"] %>">
+      <h2><%= memo["title"] %></h2>
     </a>
+    <% end %>
   </article>
   <a href="/memos/new">新規作成</a>
 </div>
