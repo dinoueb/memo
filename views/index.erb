@@ -2,7 +2,7 @@
   <article>
     <% @memos.each do |memo| %>
     <a href="/memos/<%= h(memo["id"]) %>">
-      <h2><%= h(memo["title"]) %></h2>
+      <h1><%= h(memo["title"]) %></h1>
     </a>
     <% end %>
   </article>
