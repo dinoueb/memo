@@ -10,12 +10,12 @@ bundle install
 
 ## 起動
 
-```
+```sh
 bundle exec ruby memo.rb
 ```
 
 起動後、出力される下記項目のURLよりアクセスしてください
 
-```sh
+```
 Listening on
 ```
