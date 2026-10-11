@@ -92,14 +92,19 @@ button {
   line-height: 1.5;
 }
 
-.form-item textarea {
-  height: 300px;
+.form-item textarea,
+.memo-text {
+  min-height: 300px;
 }
 
 .memo-title,
 .memo-text {
   background-color: white;
   margin: 30px 0;
+}
+
+.memo-title {
+  min-height: 45px;
 }
 
 .memo-text {
