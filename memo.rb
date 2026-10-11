@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'sinatra'
 require 'json'
 
@@ -12,9 +14,9 @@ end
 
 def fill_default_name(memo)
   {
-    "id" => memo["id"],
-    "title" => DEFAULT_TITLE,
-    "text" => memo["text"]
+    'id' => memo['id'],
+    'title' => DEFAULT_TITLE,
+    'text' => memo['text']
   }
 end
 
@@ -27,7 +29,7 @@ end
 
 def find_memo(id)
   memos = load_memos
-  memos.find { |memo| memo["id"] == id }
+  memos.find { |memo| memo['id'] == id }
 end
 
 get '/' do
@@ -35,8 +37,9 @@ get '/' do
 end
 
 get '/memos' do
-  @memos = load_memos.map { |memo| memo["title"].strip.empty? ? fill_default_name(memo) : memo }
-            .sort_by { |memo| memo["id"] }
+  @memos = load_memos
+           .map { |memo| memo['title'].strip.empty? ? fill_default_name(memo) : memo }
+           .sort_by { |memo| memo['id'] }
 
   erb :index
 end
@@ -50,11 +53,11 @@ post '/memos' do
     file.flock(File::LOCK_EX)
 
     memos = JSON.parse(file.read)
-    max_id = memos.map { |memo| memo["id"] }.max || 0
+    max_id = memos.map { |memo| memo['id'] }.max || 0
     memo = {
-      "id" => max_id + 1,
-      "title" => params["title"],
-      "text" => params["text"]
+      'id' => max_id + 1,
+      'title' => params['title'],
+      'text' => params['text']
     }
     memos << memo
 
@@ -67,7 +70,7 @@ post '/memos' do
 end
 
 get '/memos/:id' do
-  @memo = find_memo(params["id"].to_i)
+  @memo = find_memo(params['id'].to_i)
   halt 404 unless @memo
 
   erb :detail
@@ -78,7 +81,7 @@ delete '/memos/:id' do
     file.flock(File::LOCK_EX)
 
     memos = JSON.parse(file.read)
-    filtered_memos = memos.reject { |memo| memo["id"] == params["id"].to_i }
+    filtered_memos = memos.reject { |memo| memo['id'] == params['id'].to_i }
 
     if filtered_memos.length == memos.length - 1
       file.rewind
@@ -91,7 +94,7 @@ delete '/memos/:id' do
 end
 
 get '/memos/:id/edit' do
-  @memo = find_memo(params["id"].to_i)
+  @memo = find_memo(params['id'].to_i)
   halt 404 unless @memo
 
   erb :edit
@@ -102,13 +105,13 @@ patch '/memos/:id' do
     file.flock(File::LOCK_EX)
 
     memos = JSON.parse(file.read)
-    filtered_memos = memos.reject { |memo| memo["id"] == params["id"].to_i }
+    filtered_memos = memos.reject { |memo| memo['id'] == params['id'].to_i }
 
     if filtered_memos.length == memos.length - 1
       memo = {
-        "id" => params["id"].to_i,
-        "title" => params["title"],
-        "text" => params["text"]
+        'id' => params['id'].to_i,
+        'title' => params['title'],
+        'text' => params['text']
       }
       filtered_memos << memo
 
@@ -120,7 +123,7 @@ patch '/memos/:id' do
     end
   end
 
-  redirect "/memos/#{params["id"]}"
+  redirect "/memos/#{params['id']}"
 end
 
 not_found do

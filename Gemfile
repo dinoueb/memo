@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 
 ruby '4.0.5'
@@ -7,6 +9,6 @@ gem 'rackup', '>= 2.1'
 gem 'sinatra', '>= 4.2.1'
 
 group :development do
-  gem 'rubocop-fjord', require: false
   gem 'erb_lint', require: false
+  gem 'rubocop-fjord', require: false
 end
