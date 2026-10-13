@@ -32,6 +32,55 @@ def find_memo(id)
   memos.find { |memo| memo['id'] == id }
 end
 
+def insert_memo(**target_memo)
+  File.open(MEMOS_JSON_PATH, 'r+') do |file|
+    file.flock(File::LOCK_EX)
+
+    memos = JSON.parse(file.read)
+    max_id = memos.map { |memo| memo['id'] }.max || 0
+    target_memo[:id] = max_id + 1
+    memos << target_memo
+
+    file.rewind
+    file.truncate(0)
+    file.puts(JSON.pretty_generate(memos))
+  end
+end
+
+def delete_memo(id)
+  File.open(MEMOS_JSON_PATH, 'r+') do |file|
+    file.flock(File::LOCK_EX)
+
+    memos = JSON.parse(file.read)
+    filtered_memos = memos.reject { |memo| memo['id'] == id }
+
+    break unless filtered_memos.length == memos.length - 1
+
+    file.rewind
+    file.truncate(0)
+    file.puts(JSON.pretty_generate(filtered_memos))
+  end
+end
+
+def update_memo(**target_memo)
+  File.open(MEMOS_JSON_PATH, 'r+') do |file|
+    file.flock(File::LOCK_EX)
+
+    memos = JSON.parse(file.read)
+    filtered_memos = memos.reject { |memo| memo['id'] == target_memo[:id] }
+
+    return false unless filtered_memos.length == memos.length - 1
+
+    filtered_memos << target_memo
+
+    file.rewind
+    file.truncate(0)
+    file.puts(JSON.pretty_generate(filtered_memos))
+  end
+
+  true
+end
+
 get '/' do
   redirect '/memos'
 end
@@ -49,23 +98,7 @@ get '/memos/new' do
 end
 
 post '/memos' do
-  File.open(MEMOS_JSON_PATH, 'r+') do |file|
-    file.flock(File::LOCK_EX)
-
-    memos = JSON.parse(file.read)
-    max_id = memos.map { |memo| memo['id'] }.max || 0
-    memo = {
-      'id' => max_id + 1,
-      'title' => params['title'],
-      'text' => params['text']
-    }
-    memos << memo
-
-    file.rewind
-    file.truncate(0)
-    file.puts(JSON.pretty_generate(memos))
-  end
-
+  insert_memo(title: params['title'], text: params['text'])
   redirect '/memos'
 end
 
@@ -77,19 +110,7 @@ get '/memos/:id' do
 end
 
 delete '/memos/:id' do
-  File.open(MEMOS_JSON_PATH, 'r+') do |file|
-    file.flock(File::LOCK_EX)
-
-    memos = JSON.parse(file.read)
-    filtered_memos = memos.reject { |memo| memo['id'] == params['id'].to_i }
-
-    if filtered_memos.length == memos.length - 1
-      file.rewind
-      file.truncate(0)
-      file.puts(JSON.pretty_generate(filtered_memos))
-    end
-  end
-
+  delete_memo(params['id'].to_i)
   redirect '/memos'
 end
 
@@ -101,27 +122,8 @@ get '/memos/:id/edit' do
 end
 
 patch '/memos/:id' do
-  File.open(MEMOS_JSON_PATH, 'r+') do |file|
-    file.flock(File::LOCK_EX)
-
-    memos = JSON.parse(file.read)
-    filtered_memos = memos.reject { |memo| memo['id'] == params['id'].to_i }
-
-    if filtered_memos.length == memos.length - 1
-      memo = {
-        'id' => params['id'].to_i,
-        'title' => params['title'],
-        'text' => params['text']
-      }
-      filtered_memos << memo
-
-      file.rewind
-      file.truncate(0)
-      file.puts(JSON.pretty_generate(filtered_memos))
-    else
-      halt 404
-    end
-  end
+  is_success = update_memo(id: params['id'].to_i, title: params['title'], text: params['text'])
+  halt 404 unless is_success
 
   redirect "/memos/#{params['id']}"
 end
