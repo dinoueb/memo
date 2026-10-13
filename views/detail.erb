@@ -1,6 +1,12 @@
 <article class="memo-area">
-  <h1 class="memo-title"><%= h(@memo[:title]) %></h1>
-  <p class="memo-text"><%= h(@memo[:text]) %></p>
+  <div class="memo-item">
+    <p class="label">タイトル</p>
+    <h1 class="memo-title memo-field"><%= h(@memo[:title]) %></h1>
+  </div>
+  <div class="memo-item">
+    <p class="label">内容</p>
+    <p class="memo-text memo-field"><%= h(@memo[:text]) %></p>
+  </div>
   <div class="buttons">
     <a href="/memos" class="button">一覧へ戻る</a>
     <a href="/memos/<%= h(@memo[:id]) %>/edit" class="button">編集</a>
