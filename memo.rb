@@ -4,20 +4,11 @@ require 'sinatra'
 require 'json'
 
 MEMOS_JSON_PATH = File.join(__dir__, 'data', 'memos.json')
-DEFAULT_TITLE = '新規メモ'
 
 helpers do
   def h(text)
     Rack::Utils.escape_html(text)
   end
-end
-
-def fill_default_name(memo)
-  {
-    id: memo[:id],
-    title: DEFAULT_TITLE,
-    text: memo[:text]
-  }
 end
 
 def load_memos
@@ -89,9 +80,7 @@ get '/' do
 end
 
 get '/memos' do
-  @memos = load_memos
-           .map { |memo| memo[:title].strip.empty? ? fill_default_name(memo) : memo }
-           .sort_by { |memo| memo[:id] }
+  @memos = load_memos.sort_by { |memo| memo[:id] }
 
   erb :index
 end
