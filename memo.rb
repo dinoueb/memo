@@ -3,7 +3,7 @@
 require 'sinatra'
 require 'json'
 
-MEMOS_JSON_PATH = './data/memos.json'
+MEMOS_JSON_PATH = File.join(__dir__, 'data', 'memos.json')
 DEFAULT_TITLE = '新規メモ'
 
 helpers do
