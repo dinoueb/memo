@@ -69,15 +69,16 @@ def update_memo(**target_memo)
     file.flock(File::LOCK_EX)
 
     memos = JSON.parse(file.read, symbolize_names: true)
-    filtered_memos = memos.reject { |memo| memo[:id] == target_memo[:id] }
+    memo = memos.find { |memo| memo[:id] == target_memo[:id] }
 
-    return false unless filtered_memos.length == memos.length - 1
+    return false unless memo
 
-    filtered_memos << target_memo
+    memo[:title] = target_memo[:title]
+    memo[:text] = target_memo[:text]
 
     file.rewind
     file.truncate(0)
-    file.puts(JSON.pretty_generate(filtered_memos))
+    file.puts(JSON.pretty_generate(memos))
   end
 
   true
