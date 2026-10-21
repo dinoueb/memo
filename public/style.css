@@ -1,0 +1,120 @@
+* {
+  box-sizing: border-box
+}
+
+body {
+  margin: 0;
+  background-color: azure;
+}
+
+a {
+  text-decoration: none;
+}
+
+p {
+  margin: 0;
+}
+
+button {
+  cursor: pointer;
+}
+
+.site-header {
+  background-color: white;
+  border-bottom: 1px solid black;
+  padding: 15px 10px;
+}
+
+.site-title {
+  text-align: center;
+  font-size: 30px;
+}
+
+.site-main {
+  width: 50%;
+  margin: 0 auto;
+}
+
+.memo-list {
+  margin-bottom: 20px;
+}
+
+.memo-card {
+  display: block;
+  margin: 15px 0;
+  background-color: white;
+  border: 2px solid gray;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.memo-card:hover,
+.button:hover {
+  background-color: whitesmoke;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 0 30px;
+  margin-top: 30px
+}
+
+.button {
+  display: inline-block;
+  padding: 15px 20px;
+  background-color: white;
+  border: 1.5px solid gray;
+  border-radius: 10px;
+  font-size: 15px;
+}
+
+.form-item,
+.memo-item {
+  margin-top: 20px;
+}
+
+.form-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.memo-field {
+  padding: 10px 15px;
+  border: 1px solid black;
+  border-radius: 5px;
+  font-size: 20px;
+  line-height: 1.5;
+  font-weight: normal;
+  font-family: Arial;
+}
+
+.memo-item .memo-field {
+  background-color: white;
+}
+
+.form-item label,
+.memo-item .label {
+  font-size: 20px;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.form-item .memo-title,
+.memo-item .memo-title {
+  min-height: 52px;
+}
+
+.memo-text {
+  min-height: 400px;
+}
+
+.memo-item .memo-text {
+  white-space-collapse: break-spaces;
+}
+
+.error-content {
+  text-align: center;
+  padding: 50px 0;
+}

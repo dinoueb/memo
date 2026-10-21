@@ -1,0 +1,17 @@
+<div>
+  <form action="/memos/<%= h(@memo[:id]) %>" method="post" class="form-area">
+    <input type="hidden" name="_method" value="PATCH">
+    <div class="form-item">
+      <label for="title">タイトル</label>
+      <input id="title" name="title" type="text" value="<%= h(@memo[:title]) %>" maxlength="50" class="memo-title memo-field">
+    </div>
+    <div class="form-item">
+      <label for="text">内容</label>
+      <textarea id="text" name="text" maxlength="1000" class="memo-text memo-field"><%= h(@memo[:text]) %></textarea>
+    </div>
+    <div class="buttons">
+      <a href="/memos/<%= h(@memo[:id]) %>" class="button">中止</a>
+      <button type="submit" class="button">保存</button>
+    </div>
+  </form>
+</div>
