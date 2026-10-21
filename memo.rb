@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 require 'sinatra'
-require 'json'
-
-MEMOS_JSON_PATH = File.join(__dir__, 'data', 'memos.json')
+require 'pg'
 
 helpers do
   def h(text)
@@ -11,68 +9,43 @@ helpers do
   end
 end
 
-def load_memos
-  File.open(MEMOS_JSON_PATH, 'r') do |file|
-    file.flock(File::LOCK_SH)
-    JSON.parse(file.read, symbolize_names: true)
+def exec(sql, *params)
+  conn = PG.connect(dbname: 'memo')
+  conn.field_name_type = :symbol
+
+  begin
+    result = if params.empty?
+               conn.exec(sql)
+             else
+               conn.exec_params(sql, params)
+             end
+  rescue PG::Error
+    result = nil
+  ensure
+    conn.close
   end
+
+  result
+end
+
+def load_memos
+  exec('SELECT * FROM memos ORDER BY id')
 end
 
 def find_memo(id)
-  memos = load_memos
-  memos.find { |memo| memo[:id] == id }
+  exec('SELECT * FROM memos WHERE id = $1', id)&.first
 end
 
-def insert_memo(**target_memo)
-  File.open(MEMOS_JSON_PATH, 'r+') do |file|
-    file.flock(File::LOCK_EX)
-
-    memos = JSON.parse(file.read, symbolize_names: true)
-    max_id = memos.map { |memo| memo[:id] }.max || 0
-    target_memo[:id] = max_id + 1
-    memos << target_memo
-
-    file.rewind
-    file.truncate(0)
-    file.puts(JSON.pretty_generate(memos))
-  end
-
-  target_memo
+def insert_memo(**memo)
+  exec('INSERT INTO memos (title, text) VALUES ($1, $2) RETURNING id', memo[:title], memo[:text])[0]
 end
 
 def delete_memo(id)
-  File.open(MEMOS_JSON_PATH, 'r+') do |file|
-    file.flock(File::LOCK_EX)
-
-    memos = JSON.parse(file.read, symbolize_names: true)
-    filtered_memos = memos.reject { |memo| memo[:id] == id }
-
-    break unless filtered_memos.length == memos.length - 1
-
-    file.rewind
-    file.truncate(0)
-    file.puts(JSON.pretty_generate(filtered_memos))
-  end
+  exec('DELETE FROM memos WHERE id = $1', id)
 end
 
-def update_memo(**target_memo)
-  File.open(MEMOS_JSON_PATH, 'r+') do |file|
-    file.flock(File::LOCK_EX)
-
-    memos = JSON.parse(file.read, symbolize_names: true)
-    memo = memos.find { |memo| memo[:id] == target_memo[:id] }
-
-    return false unless memo
-
-    memo[:title] = target_memo[:title]
-    memo[:text] = target_memo[:text]
-
-    file.rewind
-    file.truncate(0)
-    file.puts(JSON.pretty_generate(memos))
-  end
-
-  true
+def update_memo(**memo)
+  exec('UPDATE memos SET (title, text) = ($1, $2) WHERE id = $3', memo[:title], memo[:text], memo[:id])
 end
 
 get '/' do
@@ -80,7 +53,7 @@ get '/' do
 end
 
 get '/memos' do
-  @memos = load_memos.sort_by { |memo| memo[:id] }
+  @memos = load_memos
 
   erb :index
 end
