@@ -12,7 +12,7 @@ PostgreSQLのDBに接続した状態で下記を実行してください。
 データベース（memo）及びテーブル（memos）が作成されます。
 
 ```
-psql \i init.sql
+\i init.sql
 ```
 
 ## 起動
@@ -34,5 +34,5 @@ Listening on
 データベース名「memo」が削除されます。
 
 ```
-psql \i clean.sql
+\i clean.sql
 ```
