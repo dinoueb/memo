@@ -8,6 +8,13 @@
 bundle install
 ```
 
+PostgreSQLのDBに接続した状態で下記を実行してください。
+データベース（memo）及びテーブル（memos）が作成されます。
+
+```
+psql \i init.sql
+```
+
 ## 起動
 
 ```sh
@@ -18,4 +25,14 @@ bundle exec ruby memo.rb
 
 ```
 Listening on
+```
+
+## 終了後
+
+セットアップ時のデータベースが不要でしたら、
+他のデータベースに接続した状態で下記を実行してください。
+データベース名「memo」が削除されます。
+
+```
+psql \i clean.sql
 ```
