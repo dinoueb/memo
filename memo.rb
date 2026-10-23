@@ -25,17 +25,11 @@ end
 
 def exec_sql(sql, *params)
   $cp.with do |conn|
-    begin
-      result = if params.empty?
-                conn.exec(sql)
-              else
-                conn.exec_params(sql, params)
-              end
-    rescue PG::Error
-      result = nil
+    if params.empty?
+      conn.exec(sql)
+    else
+      conn.exec_params(sql, params)
     end
-
-    result
   end
 end
 
@@ -44,7 +38,8 @@ def load_memos
 end
 
 def find_memo(id)
-  exec_sql('SELECT * FROM memos WHERE id = $1', id)&.first
+  memo = exec_sql('SELECT * FROM memos WHERE id = $1', id)
+  memo.ntuples == 1 ? memo[0] : nil
 end
 
 def insert_memo(**memo)
